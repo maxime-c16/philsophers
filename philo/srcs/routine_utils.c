@@ -6,7 +6,7 @@
 /*   By: mcauchy <mcauchy@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/07 19:15:54 by mcauchy           #+#    #+#             */
-/*   Updated: 2022/06/16 09:39:46 by mcauchy          ###   ########.fr       */
+/*   Updated: 2022/07/18 17:20:20 by mcauchy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,12 +31,14 @@ void	philo_eat(t_philo *philo)
 	int		time;
 
 	time = get_time_since_start(philo);
+	pthread_mutex_lock(&philo->data->message);
 	if (is_dead(philo))
 	{
 		pthread_mutex_unlock(&philo->data->message);
 		return ;
 	}
 	printf("%dms\t : Philosopher %d is eating\n", time, philo->id);
+	pthread_mutex_unlock(&philo->data->message);
 	pthread_mutex_lock(&philo->data->mutex);
 	philo->last_eat = get_time() - philo->data->time_start;
 	philo->meals++;
