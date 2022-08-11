@@ -6,44 +6,44 @@
 /*   By: mcauchy <mcauchy@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/05 15:44:44 by mcauchy           #+#    #+#             */
-/*   Updated: 2022/08/11 19:20:12 by mcauchy          ###   ########.fr       */
+/*   Updated: 2022/08/11 19:33:59 by mcauchy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/philo.h"
 
-static void	take_fork(t_philo *philo)
+static pthread_mutex_t	*lol(t_philo *philo, int i)
 {
-	if (philo->id % 2 == 0 && !is_dead(philo))
+	if (!(philo->id % 2))
 	{
-		pthread_mutex_lock(philo->right_fork);
-		mutex_message("has taken a fork", philo);
-		if (!is_dead(philo))
-		{
-			pthread_mutex_lock(philo->left_fork);
-			mutex_message("has taken a fork", philo);
-			philo_eat(philo);
-			pthread_mutex_unlock(philo->right_fork);
-			pthread_mutex_unlock(philo->left_fork);
-		}
+		if (!i)
+			return (philo->right_fork);
 		else
-			pthread_mutex_unlock(philo->right_fork);
+			return (philo->left_fork);
 	}
 	else
 	{
-		pthread_mutex_lock(philo->left_fork);
-		mutex_message("has taken a fork", philo);
-		if (!is_dead(philo))
-		{
-			pthread_mutex_lock(philo->right_fork);
-			mutex_message("has taken a fork", philo);
-			philo_eat(philo);
-			pthread_mutex_unlock(philo->right_fork);
-			pthread_mutex_unlock(philo->left_fork);
-		}
+		if (!i)
+			return (philo->left_fork);
 		else
-			pthread_mutex_unlock(philo->left_fork);
+			return (philo->right_fork);
 	}
+}
+
+static void	take_fork(t_philo *philo)
+{
+	pthread_mutex_lock(lol(philo, 0));
+	mutex_message("has taken a fork", philo);
+	if (is_dead(philo))
+	{
+		pthread_mutex_unlock(lol(philo, 0));
+		return ;
+	}
+	pthread_mutex_lock(lol(philo, 1));
+	mutex_message("has taken a fork", philo);
+	philo_eat(philo);
+	pthread_mutex_unlock(philo->right_fork);
+	pthread_mutex_unlock(philo->left_fork);
 }
 
 void	*routine(void *philo)
