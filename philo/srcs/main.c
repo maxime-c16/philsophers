@@ -6,7 +6,7 @@
 /*   By: mcauchy <mcauchy@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/04 20:36:29 by mcauchy           #+#    #+#             */
-/*   Updated: 2022/06/16 15:46:59 by mcauchy          ###   ########.fr       */
+/*   Updated: 2022/08/11 17:01:26 by mcauchy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ static int	one_philo(t_data *data)
 	printf("0ms: Philosopher %d take a fork\n", 1);
 	ft_usleep(data->time_to_die);
 	printf("%dms: Philosopher 1 is dead\n", data->time_to_die);
+	free(data->fork);
 	return (0);
 }
 

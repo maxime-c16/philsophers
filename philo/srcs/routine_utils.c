@@ -6,7 +6,7 @@
 /*   By: mcauchy <mcauchy@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/07 19:15:54 by mcauchy           #+#    #+#             */
-/*   Updated: 2022/07/18 17:20:20 by mcauchy          ###   ########.fr       */
+/*   Updated: 2022/08/11 17:33:14 by mcauchy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,16 @@
 int	kill_philo(t_philo *philo)
 {
 	pthread_mutex_lock(&philo->data->message);
+	pthread_mutex_lock(&philo->data->mutex);
 	if (get_time_since_start(philo) - philo->last_eat
 		> philo->data->time_to_die)
 	{
 		philo_die(philo);
+		pthread_mutex_unlock(&philo->data->mutex);
 		pthread_mutex_unlock(&philo->data->message);
 		return (1);
 	}
+	pthread_mutex_unlock(&philo->data->mutex);
 	pthread_mutex_unlock(&philo->data->message);
 	return (0);
 }
